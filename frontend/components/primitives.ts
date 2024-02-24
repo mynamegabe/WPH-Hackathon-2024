@@ -21,6 +21,9 @@ export const title = tv({
 		fullWidth: {
 			true: "w-full block",
 		},
+		highlight: {
+			true: "border-l-2 border-primary bg-primary/40 px-2",
+		},
 	},
 	defaultVariants: {
 		size: "md",

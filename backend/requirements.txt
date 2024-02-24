@@ -1,0 +1,8 @@
+google-generativeai
+fastapi
+sqlalchemy
+uvicorn
+mysql-connector-python
+itsdangerous
+python-multipart
+werkzeug

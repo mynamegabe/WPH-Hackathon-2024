@@ -4,6 +4,7 @@ import { LayoutDashboard, SquareUser, User, BookText } from "lucide-react"
 export const siteConfig = {
 	name: "JobStop",
 	description: "Make beautiful websites regardless of your design experience.",
+	apiUrl: "http://localhost:8000",
 	navItems: [
 		{
 			label: "Home",
@@ -82,12 +83,8 @@ export const siteConfig = {
 			icon: <BookText size={20} className="outline-none" />
 		},
 	],
-
 	links: {
 		github: "https://github.com/nextui-org/nextui",
-		// twitter: "https://twitter.com/getnextui",
-		// docs: "https://nextui.org",
-		// discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev"
 	},
+
 };
