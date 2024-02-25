@@ -64,7 +64,7 @@ export default function ApplicantsPage() {
                                         </Button>
                                         {/* <Button color="warning" size="sm">Edit</Button>
                                         <Button color="danger" size="sm">Delete</Button> */}
-                                        <Button color="primary" size="sm" as={Link} href={`/dashboard/forms/responses?id=${form.id}`}>
+                                        <Button color="primary" size="sm" as={Link} href={`/dashboard/forms/${form.id}/responses`}>
                                             Responses
                                         </Button>
                                     </div>

@@ -76,6 +76,23 @@ export const getProfile = async () => {
     }
 }
 
+export const getUser = async (userId: string) => {
+    const response = await fetch(`${siteConfig.apiUrl}/users/${userId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to fetch user");
+    }
+}
+
+
 
 export const getRoles = async () => {
     const response = await fetch(`${siteConfig.apiUrl}/roles`, {
@@ -159,5 +176,22 @@ export const getResponses = async (formId: string) => {
         return response.json();
     } else {
         throw new Error("Failed to fetch responses");
+    }
+}
+
+
+export const getResponse = async (formId: string, userId: string) => {
+    const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}/responses/${userId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to fetch response");
     }
 }

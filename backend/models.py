@@ -28,6 +28,18 @@ class Form(Base):
     responses = relationship("Response", back_populates="form")
 
 
+class FormResponse(Base):
+    __tablename__ = "form_responses"
+
+    id = Column(Integer, primary_key=True)
+    remark = Column(TEXT, default="")
+    form_id = Column(Integer, ForeignKey("forms.id"))
+    response_id = Column(Integer, ForeignKey("responses.id"))
+
+    form = relationship("Form", backref=backref("form_responses", cascade="all, delete-orphan"))
+    response = relationship("Response", backref=backref("form_responses", cascade="all, delete-orphan"))
+
+
 class Response(Base):
     __tablename__ = "responses"
 
@@ -36,6 +48,7 @@ class Response(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     form_id = Column(Integer, ForeignKey("forms.id"))
     field_id = Column(Integer, ForeignKey("fields.id"))
+    ai_detected = Column(Boolean, default=False)
     response = Column(TEXT)
 
     user = relationship("User", back_populates="responses")
@@ -85,6 +98,7 @@ class UserRole(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     role_id = Column(Integer, ForeignKey("roles.id"))
     status = Column(String(50), default="pending")
+    remarks = Column(TEXT, default="")
 
     user = relationship("User", back_populates="user_roles")
     role = relationship("Role", back_populates="user_roles")

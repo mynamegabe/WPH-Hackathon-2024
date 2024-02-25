@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, BackgroundTasks
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
@@ -15,7 +15,8 @@ import schemas.Response as ResponseSchemas
 import models
 from utils.db import Session as SessionLocal, Base, engine, get_db
 from utils.auth import authorize_user
-from utils.helpers import generateId
+from utils.helpers import generateId, checkFormResponse
+import utils.gemini as gemini
 from utils import config
 
 
@@ -103,6 +104,11 @@ def get_users(db: Session = Depends(get_db)):
     return users
 
 
+@app.get("/users/{user_id}", response_model=UserSchemas.User)
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    return UserControllers.get_user(db, user_id=user_id)
+
+
 @app.get("/applicants/{user_id}", response_model=UserSchemas.User)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     return UserControllers.get_user(db, user_id=user_id)
@@ -130,27 +136,38 @@ def get_form(form_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/forms/{form_id}/submit")
-def submit_form(form_id: int, response: ResponseSchemas.Response, db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+def submit_form(background_tasks: BackgroundTasks, form_id: int, response: ResponseSchemas.Response, db: Session = Depends(get_db), email: str = Depends(authorize_user)):
     form = db.query(models.Form).filter(models.Form.id == form_id).first()
     if form is None:
         raise HTTPException(status_code=404, detail="Form not found")
-    response_id = generateId()
-    user = UserControllers.get_user_by_email(db, email=email)
-    for field in response.fields:
-        print(field)
-        db_response = models.Response(response_id=response_id, user_id=user.id, form_id=form.id, field_id=field['id'], response=field['value'])
-        user.responses.append(db_response)
-        form.responses.append(db_response)
-        db.add(db_response)
-    db.commit()
+    # check if user has already submitted the form
+    responses = db.query(models.Response).join(models.User).filter(models.Response.form_id == form_id, models.User.email == email).all()
+    if responses:
+        for r in responses:
+            db.delete(r)
+        db.commit()
+
+    background_tasks.add_task(
+        checkFormResponse,
+        response, email, form.id
+    )
 
 
 @app.get("/forms/{form_id}/responses")
 def get_responses(form_id: int, db: Session = Depends(get_db)):
-    form = db.query(models.Form).filter(models.Form.id == form_id).first()
-    if form is None:
-        raise HTTPException(status_code=404, detail="Form not found")
-    return form.responses
+    users = db.query(models.User).join(models.Response).filter(models.Response.form_id == form_id).all()
+    return users
+
+
+
+@app.get("/forms/{form_id}/responses/{user_id}")
+def get_user_responses(form_id: int, user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    responses = db.query(models.Response).filter(models.Response.form_id == form_id, models.Response.user_id == user_id).all()
+    return responses
+
 
 # @app.post("/users/{user_id}/items/", response_model=schemas.Item)
 # def create_item_for_user(
