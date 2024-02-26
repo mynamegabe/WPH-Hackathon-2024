@@ -26,7 +26,7 @@ def extractTraits(text):
     prompt_parts = [
         text,
         "\nBased on the content, extract the traits or characteristics of the person.",
-        "\nE.g. hardworking, innovative, etc."
+        "\nThe output should be single words separated by commas. Example: 'Leadership, Communication, Time Management'"
     ]
     response = model.generate_content(prompt_parts)
     return response.text

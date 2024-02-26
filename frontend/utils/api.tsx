@@ -76,6 +76,24 @@ export const getProfile = async () => {
     }
 }
 
+
+export const uploadResume = async (resume: File) => {
+    const formData = new FormData();
+    formData.append("resume", resume);
+
+    const response = await fetch(`${siteConfig.apiUrl}/upload/resume`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to upload resume");
+    }
+}
+
 export const getUser = async (userId: string) => {
     const response = await fetch(`${siteConfig.apiUrl}/users/${userId}`, {
         method: "GET",
@@ -126,6 +144,7 @@ export const getForms = async () => {
         throw new Error("Failed to fetch forms");
     }
 }
+
 
 
 export const getForm = async (formId: string) => {

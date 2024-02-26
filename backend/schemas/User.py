@@ -23,6 +23,7 @@ class User(UserBase):
     image: str | None
     description: str | None
     resume: str | None
+    traits: str | None
 
     class Config:
         from_attributes = True

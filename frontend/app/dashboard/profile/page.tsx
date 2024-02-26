@@ -2,17 +2,39 @@
 
 import { title } from "@/components/primitives";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
-import { Chip } from "@nextui-org/chip";
-import { Divider } from "@nextui-org/divider";
+import { button as buttonStyles } from "@nextui-org/theme";
+import { CheckCircle2 } from "lucide-react";
 import { useState, useEffect} from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@nextui-org/button";
-import { getProfile } from "@/utils/api";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure} from "@nextui-org/modal";
+import { getProfile, uploadResume } from "@/utils/api";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 
 export default function ApplicantsPage() {
+	const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [user, setUser] = useState({});
+    const [resume, setResume] = useState<File>();
+    const [formLoading, setFormLoading] = useState(false);
+    const [formStatus, setFormStatus] = useState("idle");
+
+    const fileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let file = event.target.files[0];
+        onOpen();
+        setResume(file);
+    }
+
+    const doUpload = (onClose) => {
+        setFormLoading(true);
+        uploadResume(resume).then((response) => {
+            setFormLoading(false);
+            setFormStatus("success");
+            setTimeout(() => {
+                onClose();
+            }, 2000);
+        });
+    }
 
     useEffect(() => {
         getProfile().then((response) => {
@@ -37,13 +59,51 @@ export default function ApplicantsPage() {
                 </Card>
             </div>
             <div className="border-[1px] border-textPrimary/50 rounded-md h-32 relative hover:bg-bgSecondary/50 transition-colors">
-                <input type="file" className="h-full w-full opacity-0 cursor-pointer" />
+                <input type="file" className="h-full w-full opacity-0 cursor-pointer" 
+                    onChange={fileChange}
+                    accept=".pdf"
+                />
                 <p className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-textPrimary/50 flex flex-col items-center gap-2 cursor-pointer">
                     <Upload size={24} />
                     <span>Upload a new resume</span>
                 </p>
             </div>
-            <Button color="primary" variant="solid" as={Link} href={""}>View Resume</Button>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+				<ModalContent>
+				{(onClose) => (
+					<>
+					<ModalHeader className="flex flex-col gap-1">Upload Resume</ModalHeader>
+					<ModalBody>
+						<p> 
+						You are about to upload <span className="bold">{resume?.name}</span>
+						</p>
+					</ModalBody>
+					<ModalFooter>
+						<Button color="danger" variant="light" onPress={onClose}>
+						Cancel
+						</Button>
+						{/* <Button color="primary" onPress={doUpload}>
+                            Upload
+						</Button> */}
+                        <Button
+                        className={`${buttonStyles({ color: "primary", radius: "full", variant: "shadow" })} 
+                        ${formStatus === "success" ? "bg-success" : ""}
+                        `}
+                        onPress={() => doUpload(onClose)}
+                        isLoading={formLoading}
+                    >
+                        {formStatus === "success" ? 
+                        <CheckCircle2 size={24} />
+                        : "Upload"}
+                    </Button>
+					</ModalFooter>
+					</>
+				)}
+				</ModalContent>
+			</Modal>
+            <Button color="primary" variant="solid" as={Link} href={
+                siteConfig.apiUrl + "/profile/resume"
+            }>Download Resume</Button>
         </div>
     );
 }

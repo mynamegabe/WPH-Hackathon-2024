@@ -42,7 +42,7 @@ export default function ResponsePage({ params }: { params: { formId: string, use
                     <CardBody className={`flex flex-row gap-4 w-auto px-4 py-8`}>
                         <img src={applicant.image} alt={applicant.first_name} className="w-20 h-20 rounded-full object-cover" />
                         <div className="flex gap-4">
-                            <div className="flex flex-col gap-2 w-96">
+                            <div className="flex flex-col gap-2 max-w-96 w-full">
                                 <p className="font-semibold">{applicant.first_name} {applicant.last_name}</p>
                                 <p className="text-sm"
                                 >{applicant.description}</p>

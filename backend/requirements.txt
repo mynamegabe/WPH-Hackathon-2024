@@ -6,3 +6,5 @@ mysql-connector-python
 itsdangerous
 python-multipart
 werkzeug
+transformers
+PyMuPDF

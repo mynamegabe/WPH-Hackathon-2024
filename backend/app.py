@@ -1,8 +1,11 @@
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, BackgroundTasks
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, BackgroundTasks, UploadFile, File
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from pathlib import Path
 from contextlib import asynccontextmanager
 import hashlib
 import uvicorn
@@ -15,7 +18,7 @@ import schemas.Response as ResponseSchemas
 import models
 from utils.db import Session as SessionLocal, Base, engine, get_db
 from utils.auth import authorize_user
-from utils.helpers import generateId, checkFormResponse
+from utils.helpers import checkFormResponse, checkResume
 import utils.gemini as gemini
 from utils import config
 
@@ -60,6 +63,8 @@ async def lifespan(app: FastAPI):
 middleware = [Middleware(SessionMiddleware, secret_key=config.SECRET_KEY, same_site="none", https_only=True)]
 app = FastAPI(middleware=middleware, lifespan=lifespan)
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 origins = [
     "http://localhost:3000",
     # "*"
@@ -96,6 +101,37 @@ def create_user(user: UserSchemas.UserCreate, db: Session = Depends(get_db)):
 @app.get("/auth/me", response_model=UserSchemas.User)
 def get_current_user(db: Session = Depends(get_db), email: str = Depends(authorize_user)):
     return UserControllers.get_user_by_email(db, email=email)
+
+
+@app.get("/profile/resume")
+def get_resume(db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    user = UserControllers.get_user_by_email(db, email=email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.resume is None:
+        raise HTTPException(status_code=404, detail="Resume not found")
+    filepath = Path("uploads", "resumes", user.resume)
+    filename = f"{user.first_name}_{user.last_name}_resume.pdf"
+    return FileResponse(filepath, media_type="application/pdf", filename=user.resume)
+
+@app.post("/upload/resume")
+def upload_resume(background_tasks: BackgroundTasks, resume: UploadFile = File(...), db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    user = UserControllers.get_user_by_email(db, email=email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    contents = resume.file.read()
+    filename = f"{user.id}.pdf"
+    filepath = Path("uploads", "resumes", filename)
+    with open(filepath, "wb") as f:
+        f.write(contents)
+    user.resume = filename
+    db.commit()
+    background_tasks.add_task(
+        checkResume,
+        filepath, email
+    )
+    return {"message": "Resume uploaded successfully"}
+
 
 
 @app.get("/applicants/", response_model=list[UserSchemas.User])
