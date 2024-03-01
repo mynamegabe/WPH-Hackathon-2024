@@ -5,7 +5,7 @@ WPH Digital Hackathon 2024
 testing
 
 ## Brief Explanation of Solution
-With the increasing speed of advancements in the field of artificial intelligence, the availability of AI appliations and services to the general public has been growing. With access to these tools, job applicants are able to generate content for the resumes, interview questions, form responses and more, blurring the lines between the truly exceptional applicants and the rest.
+With the increasing speed of advancements in the field of artificial intelligence, the availability of AI applications and services to the general public has been growing. With access to these tools, job applicants are able to generate content for the resumes, interview questions, form responses and more, blurring the lines between the truly exceptional applicants and the rest.
 
 JobStop aims to combat this phenomenon. JobStop is an AI-enhanced human resourcing platform that incorporates artificial intelligence technologies to provide AI content detection, human traits/characteristic extrapolation, job matching and more. 
 

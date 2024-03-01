@@ -40,7 +40,7 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
                 </Card>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-row gap-4 flex-wrap">
             {
                     responses.map((applicant, index) => {
                         return (
