@@ -1,7 +1,7 @@
 from transformers import pipeline
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-tokenizer = AutoModelForSequenceClassification("jpelhaw/longformer-base-plagiarism-detection")
+tokenizer = AutoModelForSequenceClassification.from_pretrained("jpelhaw/longformer-base-plagiarism-detection")
 model = AutoTokenizer.from_pretrained("jpelhaw/longformer-base-plagiarism-detection")
 
 

@@ -78,6 +78,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.post("/auth/login")
 def login(request: Request, response: Response, user: UserSchemas.UserLogin, db: Session = Depends(get_db)):
     db_user = UserControllers.get_user_by_email(db, email=user.email)
@@ -113,6 +114,7 @@ def get_resume(db: Session = Depends(get_db), email: str = Depends(authorize_use
     filepath = Path("uploads", "resumes", user.resume)
     filename = f"{user.first_name}_{user.last_name}_resume.pdf"
     return FileResponse(filepath, media_type="application/pdf", filename=user.resume)
+
 
 @app.post("/upload/resume")
 def upload_resume(background_tasks: BackgroundTasks, resume: UploadFile = File(...), db: Session = Depends(get_db), email: str = Depends(authorize_user)):
