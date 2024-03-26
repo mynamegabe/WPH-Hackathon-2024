@@ -1,5 +1,6 @@
 
 import { siteConfig } from "@/config/site";
+import { data } from "autoprefixer";
 
 export const doLogin = async (email: string, password: string) => {
     const response = await fetch(`${siteConfig.apiUrl}/auth/login`, {
@@ -212,5 +213,92 @@ export const getResponse = async (formId: string, userId: string) => {
         return response.json();
     } else {
         throw new Error("Failed to fetch response");
+    }
+}
+
+
+export const createForm = async (name: string, description: string, fields: any, conversational: any ) => {
+    const response = await fetch(`${siteConfig.apiUrl}/forms`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, description, fields, conversational }),
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to create form");
+    }
+}
+
+export const startConversation = async (formId: string, field: any) => {
+    const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}/conversation`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify( field ),
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to start conversation");
+    }
+}
+
+
+export const submitConversation = async (formId: string, fields: any) => {
+    const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}/conversation/submit`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fields }),
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to submit conversation");
+    }
+}
+
+
+export const createRole = async (data: any) => {
+    const response = await fetch(`${siteConfig.apiUrl}/roles`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to create role");
+    }
+}
+
+export const getRole = async (roleId: string) => {
+    const response = await fetch(`${siteConfig.apiUrl}/role/${roleId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error("Failed to fetch role");
     }
 }

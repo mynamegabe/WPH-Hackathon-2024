@@ -73,7 +73,7 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
                                         </div>
                                         <div className="flex flex-col gap-2 w-full">
                                             <p className="text-sm text-left w-full text-textPrimary/80 font-semibold">Traits</p>
-                                            <div className="flex flex-row gap-4 w-full flex-wrap max-h-32 overflow-y-auto">
+                                            <div className="flex flex-row gap-4 w-full flex-wrap h-32 overflow-y-auto">
                                                 {applicant.traits?.split(",").map((trait, index) => {
                                                     return (
                                                         <Chip key={index} color="primary">{trait}</Chip>

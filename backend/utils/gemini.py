@@ -25,7 +25,7 @@ def detectAIContent(text):
 def extractTraits(text):
     prompt_parts = [
         text,
-        "\nBased on the content, extract the traits or characteristics of the person.",
+        "\nBased on the content, extract the personality traits or characteristics of the person.",
         "\nThe output should be single words separated by commas. Example: 'Leadership, Communication, Time Management'"
     ]
     response = model.generate_content(prompt_parts)
@@ -44,3 +44,22 @@ def determineSuitability(job_description, job_traits, text):
     response = model.generate_content(prompt_parts)
     return response.text
 
+
+def startChatAssessment():
+    chat = model.start_chat(history=[
+        # {
+        #     "role": "user",
+        #     "parts": "The following is a chat assessment with a candidate. Using the candidate's responses, generate a follow-up question.",
+        # },
+    ])
+    return chat
+
+def getNextQuestion(chat, question, reply, depth=1):
+    if depth < 3:
+        response = chat.send_message(
+            f"The question was: {question}\n\nThe reply was: {reply}\n\nBased on the reply, generate a follow-up question."
+        )
+        next_question = response.text
+        return next_question
+    else:
+        return 0

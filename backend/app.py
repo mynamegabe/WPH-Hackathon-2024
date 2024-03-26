@@ -9,12 +9,14 @@ from pathlib import Path
 from contextlib import asynccontextmanager
 import hashlib
 import uvicorn
+import json
 
 # import controllers, models, schemas
 import controllers.User as UserControllers
 import schemas.User as UserSchemas
 import schemas.Role as RoleSchemas
 import schemas.Response as ResponseSchemas
+import schemas.Form as FormSchema
 import models
 from utils.db import Session as SessionLocal, Base, engine, get_db
 from utils.auth import authorize_user
@@ -152,14 +154,43 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     return UserControllers.get_user(db, user_id=user_id)
 
 
+@app.get("/role/{role_id}", response_model=RoleSchemas.Role)
+def get_role(role_id, db: Session = Depends(get_db)):
+    return db.query(models.Role).filter(models.Role.id == role_id).first()
+        
+
 @app.get("/roles", response_model=list[RoleSchemas.Role])
 def get_roles(db: Session = Depends(get_db)):
     return db.query(models.Role).all()
 
 
+@app.post("/roles")
+def create_role(role: RoleSchemas.RoleCreate, db: Session = Depends(get_db)):
+    db_role = models.Role(name=role.name, description=role.description, salary_range=role.salary_range, openings=role.openings, location=role.location, traits=role.traits)
+    db.add(db_role)
+    db.commit()
+    return {
+        "status": "success",
+        "message": "Role created successfully"
+    }
+
+
 @app.get("/forms")
 def get_forms(db: Session = Depends(get_db)):
     return db.query(models.Form).all()
+
+@app.post("/forms")
+def create_form(form: FormSchema.FormCreate, db: Session = Depends(get_db)):
+    db_form = models.Form(name=form.name, description=form.description, conversational=form.conversational)
+    db.add(db_form)
+    db.commit()
+    fields = []
+    for f in form.fields:
+        field = models.Field(form_id=db_form.id, description=f["question"], required=1)
+        fields.append(field)
+    db.add_all(fields)
+    db.commit()
+    return db_form
 
 
 @app.get("/forms/{form_id}")
@@ -169,7 +200,44 @@ def get_form(form_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Form not found")
     return {
         "form": form,
-        "fields": form.fields
+        "fields": form.fields,
+    }
+    
+
+@app.post("/forms/{form_id}/conversation")
+def converse(form_id: int, response: ResponseSchemas.ConversationResponse, db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    chat = gemini.startChatAssessment()
+    next_question = gemini.getNextQuestion(chat, response.question, response.reply)
+    return {"question": next_question}
+    
+
+@app.post("/forms/{form_id}/conversation/submit")
+def submit_conversation(background_tasks: BackgroundTasks, form_id: int, response: ResponseSchemas.Conversation, db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    form = db.query(models.Form).filter(models.Form.id == form_id).first()
+    if form is None:
+        raise HTTPException(status_code=404, detail="Form not found")
+    
+    # get first field
+    field = db.query(models.Field).filter(models.Field.form_id == form_id).first()
+    if field is None:
+        raise HTTPException(status_code=404, detail="Field not found")
+    
+    responses = db.query(models.Response).join(models.User).filter(models.Response.form_id == form_id, models.User.email == email).all()
+    if responses:
+        for r in responses:
+            db.delete(r)
+        db.commit()
+    
+    # create new response
+    user = UserControllers.get_user_by_email(db, email=email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    response = models.Response(user_id=user.id, form_id=form.id, field_id=field.id, response=json.dumps(response.fields))
+    db.add(response)
+    db.commit()
+    
+    return {
+        "message": "Response submitted successfully"
     }
 
 

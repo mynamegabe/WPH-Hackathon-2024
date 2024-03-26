@@ -22,7 +22,9 @@ export default function ApplicantsPage() {
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className={title({ "highlight": true })}>Forms</h1>
+            <h1 className={`flex items-center justify-between ${title({ "highlight": true })}`}>Forms
+            <Button color="success" size="sm" href="/dashboard/forms/new" as={Link}>Create Form</Button>
+            </h1>
             <div className="flex flex-row gap-4 w-full">
                 <Card className="bg-bgSecondary/80 shadow-none border-[1px] border-textPrimary/50" >
                     <CardBody className="w-28 flex-col items-center gap-2">
@@ -32,22 +34,7 @@ export default function ApplicantsPage() {
                 </Card>
             </div>
 
-            <div className="flex flex-col gap-4">
-                {/* <Card
-                    className={`bg-bgSecondary/80 shadow-none w-64 !transition-all border-[1px] border-textPrimary/50`}
-                    isHoverable>
-                    <CardBody className={`flex flex-row gap-4 w-auto p-4 items-stretch overflow-hidden`}>
-                        <div className="flex flex-col gap-4 w-56">
-                            <p className="font-semibold">HR Round 1</p>
-                            <p className="text-sm text-left w-full">This form contains questions to evaluate the candidate's interpersonal skills.</p>
-                            <div className="flex flex-row gap-4 w-full">
-                                <Button color="success" size="sm">View</Button>
-                                <Button color="warning" size="sm">Edit</Button>
-                                <Button color="danger" size="sm">Delete</Button>
-                            </div>
-                        </div>
-                    </CardBody>
-                </Card> */}
+            <div className="flex flex-row flex-wrap gap-4">
                 {forms.map((form, index) => {
                     return (
                         <Card
@@ -57,7 +44,7 @@ export default function ApplicantsPage() {
                             <CardBody className={`flex flex-row gap-4 w-auto p-4 items-stretch overflow-hidden`}>
                                 <div className="flex flex-col gap-4 w-56">
                                     <p className="font-semibold">{form.name}</p>
-                                    <p className="text-sm text-left w-full">{form.description}</p>
+                                    <p className="text-sm text-left w-full h-16 text-ellipsis">{form.description}</p>
                                     <div className="flex flex-row gap-4 w-full">
                                         <Button color="success" size="sm" as={Link} href={`/form?id=${form.id}`}>
                                             Preview

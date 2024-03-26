@@ -16,21 +16,21 @@ module.exports = {
     themes :{
       light: {
         colors: {
-          bgPrimary: '#f4f3ee',
-          bgSecondary: '#edede9',
-          textPrimary: '#463f3a',
-          textSecondary: '#403d39',
+          bgPrimary: '#FEFEFC',
+          bgSecondary: '#FDFCF8',
+          textPrimary: '#0D0C04',
+          textSecondary: '#0D0C04',
           primary: '#a3c4f3',
           red: '#e63946',
         }
       },
       dark :{
         colors: {
-          bgPrimary: '#252422',
-          bgSecondary: '#403d39',
-          textPrimary: '#f4f3ee',
-          textSecondary: '#f5ebe0',
-          primary: '#00b4d8',
+          bgPrimary: '#0D0C04',
+          bgSecondary: '#191919',
+          textPrimary: '#FEFEFC',
+          textSecondary: '#FDFCF8',
+          primary: '#446EE2',
           red: '#ef233c',
         }
       }

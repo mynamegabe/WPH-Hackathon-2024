@@ -9,7 +9,7 @@ class Field(Base):
 
     id = Column(Integer, primary_key=True)
     form_id = Column(Integer, ForeignKey("forms.id"))
-    name = Column(String(50))
+    name = Column(String(50), default="")
     description = Column(TEXT, default="")
     required = Column(Boolean, default=False)
 
@@ -23,6 +23,8 @@ class Form(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     description = Column(TEXT)
+    conversational = Column(Boolean, default=False)
+    max_responses = Column(Integer, default=3)
 
     fields = relationship("Field", back_populates="form")
     responses = relationship("Response", back_populates="form")
