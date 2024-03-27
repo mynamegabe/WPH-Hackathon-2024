@@ -1,6 +1,0 @@
-DB_HOST="localhost"
-DB_NAME="jobstop"
-DB_USER="jobstop"
-DB_PASSWORD="password"
-SECRET_KEY="jobstop"
-MAKERSUITE_API_KEY="AIzaSyBIQn3y1q6vPm75r9x2f8Z8xSkMSfCABcg"

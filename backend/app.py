@@ -22,6 +22,7 @@ from utils.db import Session as SessionLocal, Base, engine, get_db
 from utils.auth import authorize_user
 from utils.helpers import checkFormResponse, checkResume
 import utils.gemini as gemini
+import utils.mailer as mailer
 from utils import config
 
 
@@ -148,6 +149,20 @@ def get_users(db: Session = Depends(get_db)):
 def get_user(user_id: int, db: Session = Depends(get_db)):
     return UserControllers.get_user(db, user_id=user_id)
 
+
+@app.post("/form/send")
+def assign_form(data: FormSchema.FormAssign, db: Session = Depends(get_db)):
+    user = UserControllers.get_user(db, user_id=data.user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    form = db.query(models.Form).filter(models.Form.id == data.form_id).first()
+    if form is None:
+        raise HTTPException(status_code=404, detail="Form not found")
+    form_url = f"{config.FRONTEND_URL}/form/{data.form_id}?email={user.email}"
+    mailer.sendEmail("Form Assignment", config.SENDGRID_TEMPLATES["FORM"], config.FROM_EMAIL, user.email, {"company_name": config.COMPANY_NAME})
+    return {
+        "message": "Form assigned successfully"
+    }
 
 @app.get("/applicants/{user_id}", response_model=UserSchemas.User)
 def get_user(user_id: int, db: Session = Depends(get_db)):

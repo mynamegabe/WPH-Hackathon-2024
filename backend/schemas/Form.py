@@ -8,3 +8,7 @@ class Form(BaseModel):
     
 class FormCreate(Form):
     pass
+
+class FormAssign(BaseModel):
+    form_id: int
+    user_id: int
