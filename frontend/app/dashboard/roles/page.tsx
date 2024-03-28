@@ -106,10 +106,13 @@ export default function DashboardPage() {
                     as={Link}
                     href={`/role/${role.id}`}
                   >
-                    View
+                    Preview
                   </Button>
-                  <Button color="warning" size="sm">
-                    Edit
+                  <Button color="warning" size="sm"
+                    as={Link}
+                    href={`/dashboard/role/${role.id}/applicants`}
+                  >
+                    Applicants
                   </Button>
                   <Button color="danger" size="sm">
                     Delete

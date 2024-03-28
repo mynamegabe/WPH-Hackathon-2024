@@ -139,7 +139,7 @@ def upload_resume(background_tasks: BackgroundTasks, resume: UploadFile = File(.
 
 
 
-@app.get("/applicants/", response_model=list[UserSchemas.User])
+@app.get("/users/", response_model=list[UserSchemas.User])
 def get_users(db: Session = Depends(get_db)):
     users = UserControllers.get_users_by_role(db, role="user")
     return users
@@ -164,10 +164,6 @@ def assign_form(data: FormSchema.FormAssign, db: Session = Depends(get_db)):
         "message": "Form assigned successfully"
     }
 
-@app.get("/applicants/{user_id}", response_model=UserSchemas.User)
-def get_user(user_id: int, db: Session = Depends(get_db)):
-    return UserControllers.get_user(db, user_id=user_id)
-
 
 @app.get("/role/{role_id}", response_model=RoleSchemas.Role)
 def get_role(role_id, db: Session = Depends(get_db)):
@@ -188,6 +184,58 @@ def create_role(role: RoleSchemas.RoleCreate, db: Session = Depends(get_db)):
         "status": "success",
         "message": "Role created successfully"
     }
+    
+
+@app.post("/role/{role_id}/apply")
+def apply_role(role_id: int, db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    role = db.query(models.Role).filter(models.Role.id == role_id).first()
+    if role is None:
+        raise HTTPException(status_code=404, detail="Role not found")
+    user = UserControllers.get_user_by_email(db, email=email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_role = models.UserRole(user_id=user.id, role_id=role.id)
+    db.add(user_role)
+    db.commit()
+    return {
+        "message": "Application submitted successfully"
+    }
+
+
+@app.get("/role/{role_id}/applicants")
+def get_applicants(role_id: int, db: Session = Depends(get_db)):
+    users = db.query(models.User).join(models.UserRole).filter(models.UserRole.role_id == role_id).all()
+    # SELECT jobstop.roles.name, jobstop.match_user_roles.user_id FROM jobstop.match_user_roles JOIN jobstop.roles ON match_user_roles.role_id = roles.id
+    matched_roles = db.query(models.Role.name, models.MatchUserRole.user_id, models.Role.id).join(models.MatchUserRole).filter(models.Role.id == models.MatchUserRole.role_id).all()
+    print(matched_roles)
+    matched_roles = [dict(zip(["role", "user_id", "role_id"], row)) for row in matched_roles]
+    # matched_roles = db.query(models.Role.name, models.MatchUserRole.user_id).join(models.MatchUserRole).filter(models.Role.id == models.MatchUserRole.role_id).all()
+    return {
+        "applicants": users,
+        "matched_roles": matched_roles
+    }
+
+
+@app.post("/user/{user_id}/roles")
+def match_roles(user_id: int, db: Session = Depends(get_db)):
+    # get roles
+    roles = db.query(models.Role).all()
+    # get user
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    roles = gemini.matchRoles(str(user.__dict__), "".join([str(role.__dict__) for role in roles]))
+    # delete all matched roles
+    db.query(models.MatchUserRole).filter(models.MatchUserRole.user_id == user_id).delete()
+    db.commit()
+    matches = []
+    for role_id in roles:
+        user_role = models.MatchUserRole(user_id=user.id, role_id=role_id)
+        matches.append(user_role)
+    db.add_all(matches)
+    db.commit()
+    
+    return roles
 
 
 @app.get("/forms")

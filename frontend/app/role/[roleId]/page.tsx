@@ -1,19 +1,15 @@
 "use client";
 
 import { title } from "@/components/primitives";
-import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
-import { Search } from "lucide-react";
 import { Button } from "@nextui-org/button";
-import { Chip } from "@nextui-org/chip";
 
-import { Calendar } from "lucide-react";
-import { getRole } from "@/utils/api";
+import { getRole, applyRole } from "@/utils/api";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { useRouter } from "next/navigation";
 
 export default function RolePage({ params }: { params: { roleId: string } }) {
+  const { router } = useRouter();
   const [role, setRole] = useState([]);
 
   useEffect(() => {
@@ -21,6 +17,15 @@ export default function RolePage({ params }: { params: { roleId: string } }) {
       setRole(response);
     });
   }, []);
+
+  const doApply = () => {
+    applyRole(params.roleId).then((res) => {
+      if (res === 404 ){
+        router.push("/auth/login"); 
+      }
+      alert("Applied successfully");
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,7 +47,9 @@ export default function RolePage({ params }: { params: { roleId: string } }) {
         <p>{role.openings}</p>
         <h3 className="text-lg font-semibold">Location</h3>
         <p>{role.location}</p>
-        <Button color="primary" className="font-semibold">
+        <Button color="primary" className="font-semibold"
+        onClick={() => doApply()}
+        >
             Apply
         </Button>
       </div>

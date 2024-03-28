@@ -104,3 +104,26 @@ class UserRole(Base):
 
     user = relationship("User", back_populates="user_roles")
     role = relationship("Role", back_populates="user_roles")
+
+
+class MatchUserRole(Base):
+    __tablename__ = "match_user_roles"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    role_id = Column(Integer, ForeignKey("roles.id"))
+    
+    user = relationship("User", backref=backref("match_user_roles", cascade="all, delete-orphan"))
+    role = relationship("Role", backref=backref("match_user_roles", cascade="all, delete-orphan"))
+
+# class Applications(Base):
+#     __tablename__ = "applications"
+
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey("users.id"))
+#     role_id = Column(Integer, ForeignKey("roles.id"))
+#     status = Column(String(50), default="pending")
+#     remarks = Column(TEXT, default="")
+
+#     user = relationship("User", backref=backref("applications", cascade="all, delete-orphan"))
+#     role = relationship("Role", backref=backref("applications", cascade="all, delete-orphan"))

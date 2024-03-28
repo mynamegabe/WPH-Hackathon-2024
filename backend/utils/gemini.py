@@ -1,4 +1,5 @@
 import utils.config as config
+import re
 
 import google.generativeai as genai
 
@@ -63,3 +64,26 @@ def getNextQuestion(chat, question, reply, depth=1):
         return next_question
     else:
         return 0
+    
+
+def matchRoles(user, roles):
+    prompt_parts = [
+        f"User: {user}",
+        f"Roles: {roles}",
+        "Based on the user's information and the provided role requirements, determine which roles they are most suitable for.",
+        "In a text response, please provide the role id(s) separated by commas, if none, respond with 0. Example: '1, 3, 5'",
+    ]
+    response = model.generate_content(prompt_parts)
+    if "0" in response.text:
+        return []
+    roles = response.text.split(", ")
+    # if len(response.parts) > 0:
+    #     print(response.parts[0].text)
+    #     roles = response.parts[0].text.split(", ")
+    # elif hasattr(response, "text"):
+    #     print(response.text)
+    #     roles = response.text.split(", ")
+    # parse response roles into list with regex
+    # roles = re.findall(r"\d: (.+)", response.text)
+    # roles = response.text.split(", ")
+    return roles

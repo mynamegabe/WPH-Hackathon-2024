@@ -75,8 +75,8 @@ export const siteConfig = {
 			icon: <SquareUser size={20} className="outline-none" />
 		},
 		{
-			label: "Applicants",
-			href: "/dashboard/applicants",
+			label: "Users",
+			href: "/dashboard/users",
 			icon: <User size={20} className="outline-none" />
 		},
 		{
