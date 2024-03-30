@@ -17,12 +17,14 @@ import schemas.User as UserSchemas
 import schemas.Role as RoleSchemas
 import schemas.Response as ResponseSchemas
 import schemas.Form as FormSchema
+import schemas.Others as OthersSchema
 import models
 from utils.db import Session as SessionLocal, Base, engine, get_db
 from utils.auth import authorize_user
 from utils.helpers import checkFormResponse, checkResume
 import utils.gemini as gemini
 import utils.mailer as mailer
+from utils.detection.eyes import checkEyes
 from utils import config
 
 
@@ -338,17 +340,18 @@ def get_user_responses(form_id: int, user_id: int, db: Session = Depends(get_db)
     return responses
 
 
-# @app.post("/users/{user_id}/items/", response_model=schemas.Item)
-# def create_item_for_user(
-#     user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
-# ):
-#     return controllers.User.create_user_item(db=db, item=item, user_id=user_id)
-
-
-# @app.get("/items/", response_model=list[schemas.Item])
-# def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     items = controllers.User.get_items(db, skip=skip, limit=limit)
-#     return items
+@app.post("/video/detect")
+def detect_video(background_tasks: BackgroundTasks, video: UploadFile = File(...), db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    contents = video.file.read()
+    filename = f"1.mp4"
+    filepath = Path("uploads", "videos", filename)
+    with open(filepath, "wb") as f:
+        f.write(contents)
+    background_tasks.add_task(
+        checkEyes,
+        str(filepath)
+    )
+    return {"message": "Video uploaded successfully"}
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
