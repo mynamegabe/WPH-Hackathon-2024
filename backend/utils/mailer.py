@@ -9,7 +9,6 @@ def sendEmail(subject: str, template_id: str, from_email: str, to_email: str, dy
         from_email=from_email,
         to_emails=to_email,
         subject=subject
-        
     )
     
     message.dynamic_template_data = dynamic_template_data

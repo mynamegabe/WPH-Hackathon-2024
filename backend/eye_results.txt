@@ -1,2 +1,2 @@
-Left: 62
-Right: 251
+Left: 0
+Right: 0

@@ -46,8 +46,8 @@ export default function ApplicantsPage({
     });
   }, []);
 
-  const doSend = (onClose) => {
-    sendForm(selectedForm, applicants[activeApplicant].id).then(() => {
+  const doSend = (userId, onClose) => {
+    sendForm(selectedForm, userId).then(() => {
       onClose();
     });
   };
@@ -115,7 +115,7 @@ export default function ApplicantsPage({
                     <p className="text-sm text-left w-full text-textPrimary/80 font-semibold">
                       Traits
                     </p>
-                    <div className="flex flex-row gap-4 w-full flex-wrap h-32 overflow-y-auto">
+                    <div className="flex flex-row content-start gap-4 w-full flex-wrap h-32 overflow-y-auto">
                       {applicant.traits?.split(",").map((trait, index) => {
                         return (
                           <Chip key={index} color="primary">
@@ -163,7 +163,7 @@ export default function ApplicantsPage({
                               </Button>
                               <Button
                                 color="primary"
-                                onPress={(e) => doSend(onClose)}
+                                onPress={(e) => doSend(applicant.id, onClose)}
                               >
                                 Send
                               </Button>

@@ -381,3 +381,21 @@ export const matchUserRoles = async (userId: string) => {
     throw new Error("Failed to match user roles");
   }
 }
+
+
+export const uploadVideo = async (video: File) => {
+  const formData = new FormData();
+  formData.append("video", video);
+
+  const response = await fetch(`${siteConfig.apiUrl}/video/detect`, {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error("Failed to upload resume");
+  }
+};
