@@ -97,6 +97,24 @@ export const uploadResume = async (resume: File) => {
   }
 };
 
+export const uploadAvatar = async (avatar: File) => {
+  const formData = new FormData();
+  formData.append("avatar", avatar);
+
+  const response = await fetch(`${siteConfig.apiUrl}/user/avatar`, {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error("Failed to upload avatar");
+  }
+};
+
+
 export const getUser = async (userId: string) => {
   const response = await fetch(`${siteConfig.apiUrl}/users/${userId}`, {
     method: "GET",

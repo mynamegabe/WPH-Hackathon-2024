@@ -14,6 +14,7 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   const [roles, setRoles] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     getRoles().then((response) => {
@@ -29,32 +30,25 @@ export default function DashboardPage() {
         })}`}
       >
         Roles
-        <Button color="success" size="sm" as={Link} href="/dashboard/roles/new">
-          Create Role
-        </Button>
       </h1>
-      <div className="flex flex-row gap-4 w-full">
-        <Card className="bg-bgSecondary/80 shadow-none border-[1px] border-textPrimary/50">
-          <CardBody className="w-28 flex-col items-center gap-2">
-            <p className="font-semibold">Roles</p>
-            <p className="text-3xl">{roles.length}</p>
-          </CardBody>
-        </Card>
-      </div>
 
       <Input
         type="text"
         label="Search"
         placeholder="Search for roles"
         startContent={<Search size={20} />}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-col gap-4">
         {roles.map((role, index) => {
           return (
             <Card
               key={index}
-              className={`bg-bgSecondary/80 shadow-none w-72 !transition-all border-[1px] border-textPrimary/50`}
+              className={`bg-bgSecondary/80 shadow-none w-full !transition-all border-[1px] border-textPrimary/50
+              ${role.name.toLowerCase().includes(search.toLowerCase()) ? "" : "hidden"}
+              `}
               isHoverable
             >
               <CardBody
@@ -81,41 +75,14 @@ export default function DashboardPage() {
                     </span>
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 w-full">
-                  <p className="text-sm text-left w-full text-textPrimary/80 font-semibold">
-                    Traits
-                  </p>
-                  <div className="flex flex-row flex-wrap content-start gap-4 h-32 w-full overflow-y-auto">
-                    {role.traits?.split(",").map((trait, index) => {
-                      return (
-                        <Chip
-                          key={index}
-                          color="primary"
-                          className="text-normal"
-                        >
-                          {trait}
-                        </Chip>
-                      );
-                    })}
-                  </div>
-                </div>
                 <div className="flex flex-row gap-4 w-full">
                   <Button
-                    color="success"
-                    size="sm"
+                    color="primary"
+                    size="md"
                     as={Link}
                     href={`/role/${role.id}`}
                   >
-                    Preview
-                  </Button>
-                  <Button color="warning" size="sm"
-                    as={Link}
-                    href={`/dashboard/role/${role.id}/applicants`}
-                  >
-                    Applicants
-                  </Button>
-                  <Button color="danger" size="sm">
-                    Delete
+                    View
                   </Button>
                 </div>
               </CardBody>

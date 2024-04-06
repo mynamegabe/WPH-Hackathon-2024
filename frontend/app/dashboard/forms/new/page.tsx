@@ -11,15 +11,20 @@ import { Switch } from "@nextui-org/switch";
 import Link from "next/link";
 import { createForm } from "@/utils/api";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateFormPage() {
+    const router = useRouter();
     const [formName, setFormName] = useState("");
     const [formDescription, setFormDescription] = useState("");
     const [formFields, setFormFields] = useState([]);
     const [isConversational, setIsConversational] = useState(false);
 
-    const onSubmit = () => {
-        createForm(formName, formDescription, formFields, isConversational);
+    const onSubmit = async () => {
+        const res = createForm(formName, formDescription, formFields, isConversational);
+        if (res.status === "success") {
+            router.push("/dashboard/forms");
+        }
     };
 
   return (

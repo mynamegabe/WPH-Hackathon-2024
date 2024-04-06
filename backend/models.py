@@ -77,7 +77,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    image = Column(String(256), default="https://media.istockphoto.com/id/1441360103/photo/close-up-portrait-of-awesome-young-caucasian-male-smiling-and-looking-at-camera-at-the.webp?b=1&s=170667a&w=0&k=20&c=d8LX9wb13x8pRm-vLkOrEDiagsjSFNoIgr-eAUeIqyI=")
+    image = Column(String(256), default="0.png")
     email = Column(String(128), unique=True, index=True)
     first_name = Column(String(50))
     last_name = Column(String(50))

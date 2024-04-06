@@ -25,6 +25,7 @@ from utils.helpers import checkFormResponse, checkResume
 import utils.gemini as gemini
 import utils.mailer as mailer
 from utils.video.eyes import checkEyes
+from utils.generate_report import PdfCreator
 from utils import config
 
 
@@ -122,6 +123,18 @@ def get_current_user(db: Session = Depends(get_db), email: str = Depends(authori
 @app.get("/profile/resume")
 def get_resume(db: Session = Depends(get_db), email: str = Depends(authorize_user)):
     user = UserControllers.get_user_by_email(db, email=email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.resume is None:
+        raise HTTPException(status_code=404, detail="Resume not found")
+    filepath = Path("uploads", "resumes", user.resume)
+    filename = f"{user.first_name}_{user.last_name}_resume.pdf"
+    return FileResponse(filepath, media_type="application/pdf", filename=user.resume)
+
+
+@app.get("/user/{user_id}/resume")
+def get_user_resume(user_id: int, db: Session = Depends(get_db)):
+    user = UserControllers.get_user(db, user_id=user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     if user.resume is None:
@@ -237,6 +250,30 @@ def get_applicants(role_id: int, db: Session = Depends(get_db)):
         "matched_roles": matched_roles
     }
 
+@app.post("/user/avatar")
+def upload_avatar(avatar: UploadFile = File(...), db: Session = Depends(get_db), email: str = Depends(authorize_user)):
+    user = UserControllers.get_user_by_email(db, email=email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    contents = avatar.file.read()
+    filename = f"{user.id}.png"
+    filepath = Path("uploads", "avatars", filename)
+    with open(filepath, "wb") as f:
+        f.write(contents)
+    user.image = filename
+    db.commit()
+    return {"message": "Avatar uploaded successfully"}
+
+
+@app.get("/uploads/avatars/{user_id}.png")
+def get_avatar(user_id: int, db: Session = Depends(get_db)):
+    user = UserControllers.get_user(db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.image is None:
+        raise HTTPException(status_code=404, detail="Avatar not found")
+    filepath = Path("uploads", "avatars", user.image)
+    return FileResponse(filepath, media_type="image/png", filename=user.image)
 
 @app.post("/user/{user_id}/roles")
 def match_roles(user_id: int, db: Session = Depends(get_db)):
@@ -279,7 +316,9 @@ def create_form(form: FormSchema.FormCreate, db: Session = Depends(get_db)):
         fields.append(field)
     db.add_all(fields)
     db.commit()
-    return db_form
+    return {
+        "status": "success",
+    }
 
 
 @app.get("/forms/{form_id}")
@@ -383,6 +422,46 @@ def detect_video(background_tasks: BackgroundTasks, video: UploadFile = File(...
     )
     return {"message": "Video uploaded successfully"}
 
+
+@app.get("/user/{user_id}/report")
+def generate_report(user_id: int, db: Session = Depends(get_db)):
+    user = UserControllers.get_user(db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    responses = db.query(models.Response).filter(models.Response.user_id == user_id).all()
+    forms = {}
+    for response in responses:
+        form = db.query(models.Form).filter(models.Form.id == response.form_id).first()
+        if form is None:
+            continue
+        if form.name not in forms:
+            forms[form.name] = []
+        # get field description
+        field = db.query(models.Field).filter(models.Field.id == response.field_id).first()
+        
+        forms[form.name].append(
+            {
+                "question": field.description,
+                "response": response.response
+            }
+            )
+    
+    pdf_creator = PdfCreator()
+    pdf_value = pdf_creator.build_pdf(
+        image=f"uploads/avatars/{user.image}",
+        name=f"{user.first_name} {user.last_name}",
+        description=user.description,
+        traits=user.traits,
+        age=user.age,
+        phone_number=user.phone_number,
+        email=user.email,
+        forms=forms
+    )
+    with open(f"{user.id}.pdf", "wb") as pdf_file:
+        pdf_file.write(pdf_value)
+        
+    return FileResponse(f"{user.id}.pdf", media_type="application/pdf", filename=f"{user.first_name}_{user.last_name}_report.pdf")
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

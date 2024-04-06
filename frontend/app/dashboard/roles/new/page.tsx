@@ -5,7 +5,7 @@ import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Search } from "lucide-react";
 import { Button } from "@nextui-org/button";
-import { Chip } from "@nextui-org/chip";
+import { Textarea } from "@nextui-org/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -75,18 +75,26 @@ export default function CreateRolePage() {
           valueAsNumber={false}
         />
 
-        <FormField
+        {/* <FormField
           type="text"
           placeholder="Description"
           name="description"
           register={register}
           error={errors.description}
           valueAsNumber={false}
+        /> */}
+        
+        <Textarea
+          placeholder="Enter a description for the role"
+          label="Description"
+          labelPlacement="outside"
+          {...register("description")}
         />
+
 
         <FormField
           type="text"
-          placeholder="Salary Range"
+          placeholder="$50,000 - $70,000"
           name="salary_range"
           register={register}
           error={errors.salary_range}

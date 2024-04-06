@@ -29,7 +29,7 @@ export default function RolePage({ params }: { params: { roleId: string } }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className={`mt-8 ${title({ highlight: true })}`}>{role.name}</h1>
+      <h1 className={`mt-8 sticky top-20 left-0 ${title({ highlight: true })} !bg-primary py-2 rounded-md`}>{role.name}</h1>
       <div className="flex flex-col gap-4 w-full mt-4">
         <h3 className="flex items-center gap-4 font-semibold">
           <img
@@ -47,7 +47,8 @@ export default function RolePage({ params }: { params: { roleId: string } }) {
         <p>{role.openings}</p>
         <h3 className="text-lg font-semibold">Location</h3>
         <p>{role.location}</p>
-        <Button color="primary" className="font-semibold"
+        <span className="py-10"></span>
+        <Button color="primary" className="font-semibold fixed bottom-4 w-[calc(100vw-4rem)]"
         onClick={() => doApply()}
         >
             Apply

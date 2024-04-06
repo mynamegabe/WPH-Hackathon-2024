@@ -9,6 +9,7 @@ werkzeug
 transformers
 PyMuPDF
 sendgrid
+reportlab
 
 # eye detection
 numpy

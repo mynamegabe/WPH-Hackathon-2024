@@ -13,55 +13,35 @@ export const siteConfig = {
 			href: "/",
 		},
     {
-      label: "Docs",
-      href: "/docs",
+      label: "Roles",
+      href: "/roles",
     },
     {
       label: "Dashboard",
       href: "/dashboard",
     },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
-      label: "About",
-      href: "/about",
-    }
+	{
+	  label: "Login",
+	  href: "/auth/login",
+	}
 	],
 	navMenuItems: [
 		{
-			label: "Profile",
-			href: "/profile",
+			label: "Home",
+			href: "/",
+		},
+		{
+			label: "Roles",
+			href: "/roles",
 		},
 		{
 			label: "Dashboard",
 			href: "/dashboard",
 		},
 		{
-			label: "Projects",
-			href: "/projects",
-		},
-		{
-			label: "Team",
-			href: "/team",
-		},
-		{
-			label: "Calendar",
-			href: "/calendar",
-		},
-		{
-			label: "Settings",
-			href: "/settings",
-		},
-		{
-			label: "Help & Feedback",
-			href: "/help-feedback",
-		},
-		{
-			label: "Logout",
-			href: "/logout",
-		},
+			label: "Login",
+			href: "/auth/login",
+		}
 	],
 	sideNavItems: [
 		{

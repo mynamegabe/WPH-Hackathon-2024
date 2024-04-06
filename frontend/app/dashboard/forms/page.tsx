@@ -44,7 +44,7 @@ export default function ApplicantsPage() {
                             <CardBody className={`flex flex-row gap-4 w-auto p-4 items-stretch overflow-hidden`}>
                                 <div className="flex flex-col gap-4 w-56">
                                     <p className="font-semibold">{form.name}</p>
-                                    <p className="text-sm text-left w-full h-16 text-ellipsis">{form.description}</p>
+                                    <p className="text-sm text-left w-full h-16 text-ellipsis overflow-auto">{form.description}</p>
                                     <div className="flex flex-row gap-4 w-full">
                                         <Button color="success" size="sm" as={Link} href={`/form?id=${form.id}`}>
                                             Preview

@@ -20,8 +20,6 @@ import { RefreshCcw, Search, Upload } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import { getUsers, getForms, matchUserRoles, uploadVideo } from "@/utils/api";
 import { siteConfig } from "@/config/site";
-import { set } from "react-hook-form";
-import { get } from "http";
 
 export default function UsersPage({
   params,
@@ -109,7 +107,7 @@ export default function UsersPage({
               >
                 <div className="flex flex-col gap-4 items-center w-56">
                   <img
-                    src={user.image}
+                    src={siteConfig.apiUrl + "/uploads/avatars/" + user.image}
                     alt={user.first_name}
                     className="w-20 h-20 rounded-full object-cover"
                   />
@@ -215,14 +213,22 @@ export default function UsersPage({
                                                         <Button color="default">Product Manager</Button> */}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-4">
+                      <div className="flex flex-row gap-4">
                         <Button
                           color="primary"
                           variant="solid"
                           as={Link}
-                          href={siteConfig.apiUrl + "/profile/resume"}
+                          href={siteConfig.apiUrl + "/user/" + user.id + "/resume"}
                         >
-                          Download Resume
+                          Resume
+                        </Button>
+                        <Button
+                          color="primary"
+                          variant="solid"
+                          as={Link}
+                          href={siteConfig.apiUrl + "/user/" + user.id + "/report"}
+                        >
+                          Report
                         </Button>
                       </div>
                     </div>

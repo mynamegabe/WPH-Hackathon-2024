@@ -10,6 +10,7 @@ import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { getForm, getResponses } from "@/utils/api";
 import { useState, useEffect } from "react";
+import { siteConfig } from "@/config/site";
 
 export default function ResponsesPage({ params }: { params: { formId: string } }) {
     const [form, setForm] = useState([]);
@@ -59,7 +60,8 @@ export default function ResponsesPage({ params }: { params: { formId: string } }
                                 isHoverable>
                                 <CardBody className={`flex flex-row gap-4 w-auto px-4 py-8 items-stretch overflow-hidden`}>
                                     <div className="flex flex-col gap-4 items-center w-56">
-                                        <img src={applicant.image} alt={applicant.first_name} className="w-20 h-20 rounded-full object-cover" />
+                                        <img src={siteConfig.apiUrl + "/uploads/avatars/" + applicant.image}
+                                        alt={applicant.first_name} className="w-20 h-20 rounded-full object-cover" />
                                         <p className="font-semibold">{applicant.first_name} {applicant.last_name}</p>
                                         <p className="text-sm max-h-16 text-ellipsis overflow-hidden"
                                         style={{

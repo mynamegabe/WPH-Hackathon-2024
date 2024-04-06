@@ -94,7 +94,7 @@ export default function ApplicantsPage({
               >
                 <div className="flex flex-col gap-4 items-center w-56">
                   <img
-                    src={applicant.image}
+                    src={siteConfig.apiUrl + "/uploads/avatars/" + applicant.image}
                     alt={applicant.first_name}
                     className="w-20 h-20 rounded-full object-cover"
                   />
@@ -197,14 +197,22 @@ export default function ApplicantsPage({
                                                         <Button color="default">Product Manager</Button> */}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-4">
+                      <div className="flex gap-4">
                         <Button
                           color="primary"
                           variant="solid"
                           as={Link}
-                          href={siteConfig.apiUrl + "/profile/resume"}
+                          href={siteConfig.apiUrl + "/user/" + applicant.id + "/resume"}
                         >
-                          Download Resume
+                          Resume
+                        </Button>
+                        <Button
+                          color="primary"
+                          variant="solid"
+                          as={Link}
+                          href={`${siteConfig.apiUrl}/user/${applicant.id}/report`}
+                        >
+                          Report
                         </Button>
                       </div>
                     </div>
