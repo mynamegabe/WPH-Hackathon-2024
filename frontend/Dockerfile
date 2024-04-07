@@ -7,7 +7,7 @@ RUN npm install --frozen-lockfile
 
 COPY . .
 
-RUN mv ./src/config/site.tsx.remote ./src/config/site.tsx
+RUN mv ./config/site.tsx.remote ./config/site.tsx
 
 # RUN npm run build
 

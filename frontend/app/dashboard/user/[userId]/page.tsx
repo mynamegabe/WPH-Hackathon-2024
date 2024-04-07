@@ -68,14 +68,7 @@ export default function UserPage({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className={title({ highlight: true })}>Users</h1>
-
-      <Input
-        type="text"
-        label="Search"
-        placeholder="Search for users"
-        startContent={<Search size={20} />}
-      />
+      <h1 className={title({ highlight: true })}>User</h1>
 
       <div className="flex flex-row gap-4 flex-wrap overflow-y-auto">
         <Card

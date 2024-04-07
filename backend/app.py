@@ -116,6 +116,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = [
     "http://localhost:3000",
+    "https://jobstop.defmain.xyz",
     # "*"
 ]
 

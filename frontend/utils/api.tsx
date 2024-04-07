@@ -2,7 +2,7 @@ import { siteConfig } from "@/config/site";
 import { data } from "autoprefixer";
 
 export const doLogin = async (email: string, password: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/auth/login`, {
+  const response = await fetch(`${siteConfig.apiUrl}/auth/login/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export const doRegister = async (
   age: string,
   password: string
 ) => {
-  const response = await fetch(`${siteConfig.apiUrl}/auth/register`, {
+  const response = await fetch(`${siteConfig.apiUrl}/auth/register/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export const doRegister = async (
 };
 
 export const getUsers = async () => {
-  const response = await fetch(`${siteConfig.apiUrl}/users`, {
+  const response = await fetch(`${siteConfig.apiUrl}/users/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export const getUsers = async () => {
 };
 
 export const getProfile = async () => {
-  const response = await fetch(`${siteConfig.apiUrl}/auth/me`, {
+  const response = await fetch(`${siteConfig.apiUrl}/auth/me/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export const uploadResume = async (resume: File) => {
   const formData = new FormData();
   formData.append("resume", resume);
 
-  const response = await fetch(`${siteConfig.apiUrl}/upload/resume`, {
+  const response = await fetch(`${siteConfig.apiUrl}/upload/resume/`, {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -99,7 +99,7 @@ export const uploadResume = async (resume: File) => {
 
 
 export const updateUserDescription = async (description: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/user/description`, {
+  const response = await fetch(`${siteConfig.apiUrl}/user/description/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export const uploadAvatar = async (avatar: File) => {
   const formData = new FormData();
   formData.append("avatar", avatar);
 
-  const response = await fetch(`${siteConfig.apiUrl}/user/avatar`, {
+  const response = await fetch(`${siteConfig.apiUrl}/user/`, {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -135,7 +135,7 @@ export const uploadAvatar = async (avatar: File) => {
 
 
 export const getUser = async (userId: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/users/${userId}`, {
+  const response = await fetch(`${siteConfig.apiUrl}/users/${userId}/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -152,7 +152,7 @@ export const getUser = async (userId: string) => {
 
 
 export const getUserVideos = async (userId: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/user/${userId}/videos`, {
+  const response = await fetch(`${siteConfig.apiUrl}/user/${userId}/videos/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -169,7 +169,7 @@ export const getUserVideos = async (userId: string) => {
 
 
 export const getRoles = async () => {
-  const response = await fetch(`${siteConfig.apiUrl}/roles`, {
+  const response = await fetch(`${siteConfig.apiUrl}/roles/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -185,7 +185,7 @@ export const getRoles = async () => {
 };
 
 export const getForms = async () => {
-  const response = await fetch(`${siteConfig.apiUrl}/forms`, {
+  const response = await fetch(`${siteConfig.apiUrl}/forms/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export const getForms = async () => {
 };
 
 export const getForm = async (formId: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}`, {
+  const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -217,7 +217,7 @@ export const getForm = async (formId: string) => {
 };
 
 export const submitForm = async (formId: string, fields: any) => {
-  const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}/submit`, {
+  const response = await fetch(`${siteConfig.apiUrl}/forms/${formId}/submit/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -235,7 +235,7 @@ export const submitForm = async (formId: string, fields: any) => {
 
 export const getResponses = async (formId: string) => {
   const response = await fetch(
-    `${siteConfig.apiUrl}/forms/${formId}/responses`,
+    `${siteConfig.apiUrl}/forms/${formId}/responses/`,
     {
       method: "GET",
       headers: {
@@ -254,7 +254,7 @@ export const getResponses = async (formId: string) => {
 
 export const getResponse = async (formId: string, userId: string) => {
   const response = await fetch(
-    `${siteConfig.apiUrl}/forms/${formId}/responses/${userId}`,
+    `${siteConfig.apiUrl}/forms/${formId}/responses/${userId}/`,
     {
       method: "GET",
       headers: {
@@ -277,7 +277,7 @@ export const createForm = async (
   fields: any,
   conversational: any
 ) => {
-  const response = await fetch(`${siteConfig.apiUrl}/forms`, {
+  const response = await fetch(`${siteConfig.apiUrl}/forms/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -295,7 +295,7 @@ export const createForm = async (
 
 export const startConversation = async (formId: string, field: any) => {
   const response = await fetch(
-    `${siteConfig.apiUrl}/forms/${formId}/conversation`,
+    `${siteConfig.apiUrl}/forms/${formId}/conversation/`,
     {
       method: "POST",
       headers: {
@@ -315,7 +315,7 @@ export const startConversation = async (formId: string, field: any) => {
 
 export const submitConversation = async (formId: string, fields: any) => {
   const response = await fetch(
-    `${siteConfig.apiUrl}/forms/${formId}/conversation/submit`,
+    `${siteConfig.apiUrl}/forms/${formId}/conversation/submit/`,
     {
       method: "POST",
       headers: {
@@ -334,7 +334,7 @@ export const submitConversation = async (formId: string, fields: any) => {
 };
 
 export const createRole = async (data: any) => {
-  const response = await fetch(`${siteConfig.apiUrl}/roles`, {
+  const response = await fetch(`${siteConfig.apiUrl}/roles/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -351,7 +351,7 @@ export const createRole = async (data: any) => {
 };
 
 export const getRole = async (roleId: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/role/${roleId}`, {
+  const response = await fetch(`${siteConfig.apiUrl}/role/${roleId}/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -367,7 +367,7 @@ export const getRole = async (roleId: string) => {
 };
 
 export const applyRole = async (roleId: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/role/${roleId}/apply`, {
+  const response = await fetch(`${siteConfig.apiUrl}/role/${roleId}/apply/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -384,7 +384,7 @@ export const applyRole = async (roleId: string) => {
 
 export const getApplicants = async (role_id: string) => {
   const response = await fetch(
-    `${siteConfig.apiUrl}/role/${role_id}/applicants`,
+    `${siteConfig.apiUrl}/role/${role_id}/applicants/`,
     {
       method: "GET",
       headers: {
@@ -402,7 +402,7 @@ export const getApplicants = async (role_id: string) => {
 };
 
 export const sendForm = async (formId: string, userId: number) => {
-  const response = await fetch(`${siteConfig.apiUrl}/form/send`, {
+  const response = await fetch(`${siteConfig.apiUrl}/form/send/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -422,7 +422,7 @@ export const sendForm = async (formId: string, userId: number) => {
 };
 
 export const matchUserRoles = async (userId: string) => {
-  const response = await fetch(`${siteConfig.apiUrl}/user/${userId}/roles`, {
+  const response = await fetch(`${siteConfig.apiUrl}/user/${userId}/roles/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -442,7 +442,7 @@ export const uploadVideo = async (video: File, userId: string) => {
   const formData = new FormData();
   formData.append("video", video);
 
-  const response = await fetch(`${siteConfig.apiUrl}/video/detect/${userId}`, {
+  const response = await fetch(`${siteConfig.apiUrl}/video/detect/${userId}/`, {
     method: "POST",
     body: formData,
     credentials: "include",

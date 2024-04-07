@@ -14,6 +14,9 @@ By detecting the usage of artificial intelligence, employers are given more visi
 ## Video Presentation
 
 
+## Github Repository
+[JobStop](https://github.com/mynamegabe/WPH-Hackathon-2024)
+
 ## Keywords
 Artificial Intelligence, Gemini, Python, Next.js, Large Language Models
 

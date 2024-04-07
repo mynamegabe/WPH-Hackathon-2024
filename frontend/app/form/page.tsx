@@ -3,7 +3,7 @@
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
-import { Input } from "@nextui-org/input";
+import { Input, Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { button as buttonStyles } from "@nextui-org/theme";
 import { siteConfig } from "@/config/site";
@@ -88,7 +88,7 @@ export default function FormPage() {
               !form.conversational && (
                 <div key={index} className="flex flex-col gap-2 w-full">
                   <p className="font-semibold">{field.description}</p>
-                  <Input
+                  <Textarea
                     variant="faded"
                     type={field.type}
                     placeholder={field.placeholder}
@@ -102,7 +102,7 @@ export default function FormPage() {
             <div className="flex flex-col gap-2 w-full">
               <p className="font-semibold">{fields[0].description}</p>
               <div className="flex items-center gap-4">
-                <Input
+                <Textarea
                   variant="faded"
                   size="sm"
                   type={fields[0].type}
@@ -140,7 +140,7 @@ export default function FormPage() {
                     <p className="font-semibold">{field.question}</p>
 
                     <div className="flex gap-2 w-full">
-                      <Input
+                      <Textarea
                         variant="faded"
                         size="sm"
                         type="text"

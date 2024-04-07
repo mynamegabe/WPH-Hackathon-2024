@@ -21,3 +21,4 @@ node_modules/
 JobStop presentation.mkv
 backend/utils/config.py
 backend/utils/config.py.remote
+/submission
