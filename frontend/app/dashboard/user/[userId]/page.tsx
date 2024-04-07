@@ -218,8 +218,8 @@ export default function UserPage({
                   />
                   <div className="flex flex-col gap-2">
                     <p className="font-semibold">Eye tracking</p>
-                    <p className="text-sm">Left: {video.left}</p>
-                    <p className="text-sm">Right: {video.right}</p>
+                    <p className="text-sm">Left: {(video.left / (video.left + video.right) * 100).toFixed(2)}%</p>
+                    <p className="text-sm">Right: {(video.right / (video.left + video.right) * 100).toFixed(2)}%</p>
                   </div>
                 </div>
               </CardBody>

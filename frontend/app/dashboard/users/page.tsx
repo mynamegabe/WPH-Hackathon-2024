@@ -142,7 +142,12 @@ export default function UsersPage({
                     <Button color="warning" variant="solid" onClick={onOpen}>
                       Check video
                     </Button>
-                    <Button color="warning" variant="solid" as={Link} href={"/dashboard/user/" + user.id}>
+                    <Button
+                      color="warning"
+                      variant="solid"
+                      as={Link}
+                      href={"/dashboard/user/" + user.id}
+                    >
                       View user
                     </Button>
                     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -161,7 +166,10 @@ export default function UsersPage({
                                 />
                                 <p className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-textPrimary/50 flex flex-col items-center gap-2 cursor-pointer">
                                   <Upload size={24} />
-                                  <span>Upload a video</span>
+
+                                  <span>
+                                    {video ? video.name : "Upload video"}
+                                  </span>
                                 </p>
                               </div>
                             </ModalBody>

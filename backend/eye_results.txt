@@ -1,2 +1,2 @@
-Left: 0
-Right: 0
+Left: 76
+Right: 107

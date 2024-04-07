@@ -22,3 +22,6 @@ JobStop presentation.mkv
 backend/utils/config.py
 backend/utils/config.py.remote
 /submission
+JobStop Documentation.pdf
+JobStop Source Code.pdf
+*.mp4
