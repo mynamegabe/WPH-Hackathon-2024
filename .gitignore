@@ -20,3 +20,4 @@ node_modules/
 # information for Eclipse / Flash Builder.
 JobStop presentation.mkv
 backend/utils/config.py
+backend/utils/config.py.remote

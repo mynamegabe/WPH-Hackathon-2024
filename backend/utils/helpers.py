@@ -4,6 +4,7 @@ import random
 import utils.gemini as gemini
 import utils.detection as detection
 import utils.pdf as pdf
+from utils.video.eyes import checkEyes
 from utils.db import Session
 import models
 
@@ -37,3 +38,11 @@ def checkResume(filepath: str, email: str):
         user.traits = traits
         db.commit()
     
+
+def doCheckEyes(filepath: str, user_id: int, filename: str):
+    left, right = checkEyes(filepath)
+    with Session() as db:
+        user_video = models.UserVideos(user_id=user_id, left=left, right=right, filename=filename)
+        db.add(user_video)
+        db.commit()
+    return True

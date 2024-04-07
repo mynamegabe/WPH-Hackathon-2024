@@ -6,7 +6,7 @@ export const siteConfig = {
 	company: "WPH Digital",
 	companyLogo: "/wph.png",
 	description: "Make beautiful websites regardless of your design experience.",
-	apiUrl: "http://localhost:8000",
+	apiUrl: "https://jobstop-backend.defmain.xyz",
 	navItems: [
 		{
 			label: "Home",
@@ -44,11 +44,6 @@ export const siteConfig = {
 		}
 	],
 	sideNavItems: [
-		// {
-		// 	label: "Dashboard",
-		// 	href: "/dashboard",
-		// 	icon: <LayoutDashboard size={20} className="outline-none"/>
-		// },
 		{
 			label: "Roles",
 			href: "/dashboard/roles",

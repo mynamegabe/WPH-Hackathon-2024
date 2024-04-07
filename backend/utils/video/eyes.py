@@ -163,6 +163,7 @@ def checkEyes(filename: str):
     with open("eye_results.txt", "w") as file:
         file.write(f"Left: {gaze['left']}\nRight: {gaze['right']}\n")
     
+    return gaze["left"], gaze["right"]
     
 
 

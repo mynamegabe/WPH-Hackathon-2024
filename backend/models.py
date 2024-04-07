@@ -116,6 +116,20 @@ class MatchUserRole(Base):
     user = relationship("User", backref=backref("match_user_roles", cascade="all, delete-orphan"))
     role = relationship("Role", backref=backref("match_user_roles", cascade="all, delete-orphan"))
 
+
+class UserVideos(Base):
+    __tablename__ = "user_videos"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    filename = Column(String(256), default="")
+    left = Column(Integer, default=0)
+    right = Column(Integer, default=0)
+    status = Column(String(50), default="pending")
+    remarks = Column(TEXT, default="")
+
+    user = relationship("User", backref=backref("user_videos", cascade="all, delete-orphan"))
+
 # class Applications(Base):
 #     __tablename__ = "applications"
 

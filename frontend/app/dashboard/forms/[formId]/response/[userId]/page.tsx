@@ -9,6 +9,7 @@ import { Bot } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { getForm, getUser, getResponse } from "@/utils/api";
+import { siteConfig } from "@/config/site";
 import { useState, useEffect } from "react";
 
 export default function ResponsePage({
@@ -22,7 +23,7 @@ export default function ResponsePage({
 
   useEffect(() => {
     getUser(params.userId).then((response) => {
-      setApplicant(response);
+      setApplicant(response.user);
     });
     getForm(params.formId).then((response) => {
       setForm(response.form);
@@ -46,7 +47,7 @@ export default function ResponsePage({
         >
           <CardBody className={`flex flex-row gap-4 w-auto px-4 py-8`}>
             <img
-              src={applicant.image}
+              src={siteConfig.apiUrl + "/uploads/avatars/" + applicant.image}
               alt={applicant.first_name}
               className="w-20 h-20 rounded-full object-cover"
             />

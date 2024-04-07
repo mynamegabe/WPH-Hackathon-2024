@@ -30,7 +30,7 @@ export const SideNavbar = () => {
             </div>
             <div className="flex flex-col gap-0">
                 <Button as={Link} href="/dashboard/profile" className="bg-transparent justify-start rounded-lg hover:bg-bgPrimary" startContent={<User size={16} />}>Profile</Button>
-                <Button className="bg-transparent justify-start hover:bg-bgPrimary" startContent={<Settings size={16} />}>Settings</Button>
+                {/* <Button className="bg-transparent justify-start hover:bg-bgPrimary" startContent={<Settings size={16} />}>Settings</Button> */}
                 <Button className="bg-transparent text-red justify-start hover:bg-red hover:text-white">Logout</Button>
             </div>
         </div>

@@ -15,9 +15,10 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/modal";
-import { getProfile, uploadResume, uploadAvatar } from "@/utils/api";
+import { getProfile, uploadResume, uploadAvatar, updateUserDescription } from "@/utils/api";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { Textarea } from "@nextui-org/input";
 
 export default function ApplicantsPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -81,13 +82,21 @@ export default function ApplicantsPage() {
             <img
               src={siteConfig.apiUrl + "/uploads/avatars/" + user.image}
               alt="Profile Picture"
-              className="w-20 h-20 rounded-full object-cover"
+              className="w-20 h-20 rounded-full object-cover hover:brightness-75 transition-all cursor-pointer"
               onClick={() => onAvatarOpen()}
             />
             <p className="font-semibold">
               {user.first_name} {user.last_name}
             </p>
-            <p>{user.description}</p>
+            {/* <p>{user.description}</p> */}
+            <Textarea
+              label="Description"
+              placeholder="Tell us about yourself"
+              value={user.description}
+              onChange={(e) =>
+                setUser({ ...user, description: e.target.value })
+              }
+            />
             <p className="text-sm text-left w-full text-textPrimary/50 flex gap-2">
               Age <span className="text-textSecondary">{user.age}</span>
             </p>
@@ -98,9 +107,15 @@ export default function ApplicantsPage() {
             <p className="text-sm text-left w-full text-textPrimary/50 flex gap-2">
               Email <span className="text-textSecondary">{user.email}</span>
             </p>
-            <p className="text-sm text-left w-full text-textPrimary/50 flex gap-2">
-              Role <span className="text-textSecondary">{user.role}</span>
-            </p>
+            <Button
+              color="primary"
+              onPress={() => {
+                updateUserDescription(user.description);
+              }}
+              className="w-full"
+            >
+              Update
+            </Button>
           </CardBody>
         </Card>
       </div>

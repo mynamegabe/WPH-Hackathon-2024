@@ -97,6 +97,25 @@ export const uploadResume = async (resume: File) => {
   }
 };
 
+
+export const updateUserDescription = async (description: string) => {
+  const response = await fetch(`${siteConfig.apiUrl}/user/description`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ description }),
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error("Failed to update description");
+  }
+}
+
+
 export const uploadAvatar = async (avatar: File) => {
   const formData = new FormData();
   formData.append("avatar", avatar);
@@ -130,6 +149,24 @@ export const getUser = async (userId: string) => {
     throw new Error("Failed to fetch user");
   }
 };
+
+
+export const getUserVideos = async (userId: string) => {
+  const response = await fetch(`${siteConfig.apiUrl}/user/${userId}/videos`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error("Failed to fetch user videos");
+  }
+}
+
 
 export const getRoles = async () => {
   const response = await fetch(`${siteConfig.apiUrl}/roles`, {
@@ -401,11 +438,11 @@ export const matchUserRoles = async (userId: string) => {
 }
 
 
-export const uploadVideo = async (video: File) => {
+export const uploadVideo = async (video: File, userId: string) => {
   const formData = new FormData();
   formData.append("video", video);
 
-  const response = await fetch(`${siteConfig.apiUrl}/video/detect`, {
+  const response = await fetch(`${siteConfig.apiUrl}/video/detect/${userId}`, {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -414,6 +451,6 @@ export const uploadVideo = async (video: File) => {
   if (response.ok) {
     return response.json();
   } else {
-    throw new Error("Failed to upload resume");
+    throw new Error("Failed to upload video");
   }
 };

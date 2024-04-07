@@ -18,7 +18,7 @@ export default function LoginPage() {
 	const onLogin = async () => {
 		const response = await doLogin(email, password);
 		if (response) {
-			router.push("/dashboard");
+			router.push("/dashboard/roles");
 		}
 	}
 

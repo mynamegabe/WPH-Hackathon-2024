@@ -51,18 +51,6 @@ def extractTraits(text):
     return response.text
 
 
-def determineSuitability(job_description, job_traits, text):
-    prompt_parts = [
-        f"Job description: {job_description}",
-        f"Job traits: {job_traits}",
-        f"Response: {text}",
-        "\nBased on the response, determine if the person is suitable for the job.",
-        "\nA: Yes",
-        "\nB: No",
-    ]
-    response = model.generate_content(prompt_parts)
-    return response.text
-
 
 def startChatAssessment():
     chat = model.start_chat(history=[
@@ -92,13 +80,11 @@ def matchRoles(user, roles):
     prompt_parts = [
         f"User: \nDescription: {user.description} Traits: {user.traits}",
         f"Roles: {rolesText}",
-        "\nBased on the user's information, which roles could the user be suitable for? Provide the role IDs separated by commas.",
+        "\nBased on the user's information, which roles could the user be suitable for? Do not choose all. Provide the role IDs separated by commas.",
         "\nExample: 1, 2, 3",
     ]
     response = model.generate_content(prompt_parts)
-    print(response.prompt_feedback)
     r = response.text
-    print(r)
     if r == "0":
         return []
 

@@ -51,7 +51,7 @@ export default function UsersPage({
     setVideo(file);
   };
 
-  const doUpload = (onClose) => {
+  const doUpload = (onClose, userId) => {
     // setFormLoading(true);
     // uploadResume(resume).then((response) => {
     //   setFormLoading(false);
@@ -60,7 +60,7 @@ export default function UsersPage({
     //     onClose();
     //   }, 2000);
     // });
-    uploadVideo(video).then((response) => {
+    uploadVideo(video, userId).then((response) => {
       onClose();
     });
   };
@@ -142,6 +142,9 @@ export default function UsersPage({
                     <Button color="warning" variant="solid" onClick={onOpen}>
                       Check video
                     </Button>
+                    <Button color="warning" variant="solid" as={Link} href={"/dashboard/user/" + user.id}>
+                      View user
+                    </Button>
                     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                       <ModalContent>
                         {(onClose) => (
@@ -172,7 +175,7 @@ export default function UsersPage({
                               </Button>
                               <Button
                                 color="primary"
-                                onPress={(e) => doUpload(onClose)}
+                                onPress={(e) => doUpload(onClose, user.id)}
                               >
                                 Send
                               </Button>
@@ -218,7 +221,9 @@ export default function UsersPage({
                           color="primary"
                           variant="solid"
                           as={Link}
-                          href={siteConfig.apiUrl + "/user/" + user.id + "/resume"}
+                          href={
+                            siteConfig.apiUrl + "/user/" + user.id + "/resume"
+                          }
                         >
                           Resume
                         </Button>
@@ -226,7 +231,9 @@ export default function UsersPage({
                           color="primary"
                           variant="solid"
                           as={Link}
-                          href={siteConfig.apiUrl + "/user/" + user.id + "/report"}
+                          href={
+                            siteConfig.apiUrl + "/user/" + user.id + "/report"
+                          }
                         >
                           Report
                         </Button>

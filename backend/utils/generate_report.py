@@ -1,54 +1,8 @@
 # from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-# from reportlab.lib.pagesizes import LETTER
-# from reportlab.lib.styles import ParagraphStyle
-# from reportlab.platypus import Paragraph
-# from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-# from reportlab.lib.styles import getSampleStyleSheet
-# from reportlab.rl_config import defaultPageSize
-# from reportlab.lib.units import inch
-# PAGE_HEIGHT = LETTER[1]
-# PAGE_WIDTH = LETTER[0]
-# styles = getSampleStyleSheet()
 
-# pdfmetrics.registerFont(
-#     TTFont('LexendDeca', 'LexendDeca-VariableFont_wght.ttf'))
-# # pdfmetrics.registerFont(TTFont('Raleway', 'Raleway-VariableFont_wght.ttf'))
-# # pdfmetrics.registerFont(TTFont('Anonymous', 'AnonymousPro-Regular.ttf'))
-
-# font = "LexendDeca"
-# container = [(LETTER[0]-2*inch), (LETTER[1]-2*inch)]
-
-# def generate_report():
-#     # c = Canvas("report.pdf", pagesize=LETTER)
-#     doc = SimpleDocTemplate("report.pdf")
-#     Story = []
-#     ps = ParagraphStyle(name="Title", fontSize=24, fontName=font, alignment=1)
-#     p = Paragraph("Report", ps)
-#     Story.append(p)
-
-#     def first_page(canvas, doc):
-#         canvas.saveState()
-#         canvas.drawImage("../uploads/avatars/0.png",
-#                     container[1]/2 - 60, container[1], width=72, height=72)
-
-#         canvas.setFont(font, 14)
-#         canvas.drawCentredString(LETTER[0] / 2, LETTER[1] - 180, "John Doe")
-#         canvas.setFont(font, 12)
-#         canvas.drawCentredString(LETTER[0] / 2, LETTER[1] - 200, '''John Doe is a software engineer with 5 years of experience. He is proficient in Python, Java, and C++. He is also a team player and a quick learner.''')
-
-
-#         canvas.restoreState()
-
-
-#     Story.append(Spacer(1, 12))
-#     doc.build(Story, onFirstPage=first_page)
-
-
-# if __name__ == "__main__":
-#     generate_report()
-
+import json
 from io import BytesIO
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
@@ -98,8 +52,12 @@ class PdfCreator:
         h3_style.fontName = 'LexendDeca'
         return h3_style
     
+    def get_heading4_style(self):
+        sample_style_sheet = getSampleStyleSheet()
+        h4_style = sample_style_sheet['Heading4']
+        h4_style.fontName = 'LexendDeca'
+        return h4_style
     
-
     def build_pdf(self, image, name, description, traits, age, phone_number, email, forms):
         pdf_buffer = BytesIO()
         my_doc = SimpleDocTemplate(
@@ -114,6 +72,7 @@ class PdfCreator:
         heading1_style = self.get_heading1_style()
         heading2_style = self.get_heading2_style()
         heading3_style = self.get_heading3_style()
+        heading4_style = self.get_heading4_style()
         flowables = [
             Paragraph("Report", heading1_style),
             Image(image, width=72, height=72),
@@ -136,7 +95,16 @@ class PdfCreator:
             flowables.append(Paragraph(form, heading2_style))
             for response in forms[form]:
                 flowables.append(Paragraph(response["question"], heading3_style))
-                flowables.append(Paragraph(response["response"], body_style))
+                try:
+                    # decode json
+                    resp = json.loads(response["response"])
+                    for q in resp:
+                        flowables.append(Paragraph(f"{q['question']}", heading4_style))
+                        flowables.append(Paragraph(f"{q['reply']}", body_style))
+                    continue
+                except Exception as e:
+                    print(e)
+                    flowables.append(Paragraph(response["response"], body_style))
                 
         my_doc.build(
             flowables,

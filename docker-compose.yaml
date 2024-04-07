@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    links:
+    - backend
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    links:
+      - jobstopdb
+    depends_on:
+      jobstopdb:
+        condition: service_healthy
+  jobstopdb:
+    image: mysql:5.7
+    ports:
+      - "3311:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jobstop
+      MYSQL_USER: jobstop
+      MYSQL_PASSWORD: password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "--password=password", "--user=jobstop", "status"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
